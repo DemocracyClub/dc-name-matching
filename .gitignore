@@ -1,0 +1,12 @@
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+dist/
+
+# Output from the examples
+examples/divisions/webdemo_state/
+examples/divisions/data/*.matched.csv
+
+# Editor files
+*.swp

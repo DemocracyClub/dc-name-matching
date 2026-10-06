@@ -1,0 +1,59 @@
+Calling Jev for 257 inputs (0 cached)...
+  25/257
+  50/257
+  75/257
+  100/257
+  125/257
+  150/257
+  175/257
+  200/257
+  225/257
+  250/257
+Results:            257 (0 errors)
+Accuracy:           246/257 (95.7%)
+  expected a ballot:   239/239 (100.0%)
+  expected no match:   7/18 (38.9%)
+Fuzzy top-1 baseline: 72.8%
+Mean options:       38
+Total cost:         $0.03734
+
+Confidence   n   accuracy
+  0.9-1.0   243   97.5%
+  0.7-0.9     8   75.0%
+  0.5-0.7     5   60.0%
+  0.0-0.5     1   0.0%
+
+Misses (11):
+  'gwernaffield and gwernymynydd / y waun a gwernymynydd'  [local.flintshire.2022-05-05]
+      expected no_match
+      got      local.flintshire.gwernaffield-and-gwernymynydd.2022-05-05 conf=1
+  'willesden green'  [local.brent.2018-05-03]
+      expected no_match
+      got      local.brent.willesden-green.2018-05-03 conf=0.97
+  'llanfoist & govilon'  [local.monmouthshire.2022-05-05]
+      expected no_match
+      got      local.monmouthshire.llanfoist-fawr-and-govilon.2022-05-05 conf=0.97
+  'mitchel troy'  [local.monmouthshire.2022-05-05]
+      expected no_match
+      got      local.monmouthshire.mitchel-troy-and-trellech-united.2022-05-05 conf=0.96
+  'llanbadoc'  [local.monmouthshire.2022-05-05]
+      expected no_match
+      got      local.monmouthshire.llanbadoc-and-usk.2022-05-05 conf=0.95
+  'llanfoist fawr'  [local.monmouthshire.2022-05-05]
+      expected no_match
+      got      local.monmouthshire.llanfoist-fawr-and-govilon.2022-05-05 conf=0.93
+  'egremont south'  [local.copeland.2019-05-02]
+      expected no_match
+      got      local.copeland.egremont.2019-05-02 conf=0.89
+  'cleator moor south'  [local.copeland.2019-05-02]
+      expected no_match
+      got      local.copeland.cleator-moor.2019-05-02 conf=0.88
+  'tewkesbury: churchdown'  [local.gloucestershire.2019-05-02]
+      expected no_match
+      got      local.gloucestershire.churchdown.by.2019-05-02 conf=0.54
+  'castle'  [local.monmouthshire.2022-05-05]
+      expected no_match
+      got      local.monmouthshire.caldicot-castle.2022-05-05 conf=0.53
+  'haslemere'  [local.waverley.2019-05-02]
+      expected no_match
+      got      local.waverley.haslemere-critchmere-and-shottermill.2019-05-02 conf=0.44

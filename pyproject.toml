@@ -1,0 +1,26 @@
+[project]
+name = "dc-name-matching"
+version = "0.1.0"
+description = "Match two lists of names that refer to the same things but are spelt differently"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    # For examples/ and scripts/, not the package
+    "flask>=3.1.3",
+    "python-dotenv>=1.2.3",
+    "rapidfuzz>=3.14.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["examples/divisions"]

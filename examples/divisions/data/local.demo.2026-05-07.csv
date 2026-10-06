@@ -1,0 +1,8 @@
+candidate,ward,expected_ballot,variant
+Candidate 1,Abbey,local.demo.abbey.2026-05-07,exact
+Candidate 2,CASTLE,local.demo.castle.2026-05-07,upper
+Candidate 3,st marys ward,local.demo.st-marys.2026-05-07,cleaned
+Candidate 4,Hillside,local.demo.hillside-north.2026-05-07,needs a human
+Candidate 5,Hillside (2),local.demo.hillside-south.2026-05-07,needs a human
+Candidate 6,Ward 6,local.demo.riverside.2026-05-07,needs a human
+Candidate 7,Abbey,local.demo.abbey.2026-05-07,exact
