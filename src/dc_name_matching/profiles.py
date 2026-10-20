@@ -161,6 +161,15 @@ def party_target_variants(label: str) -> list[str]:
     return dedupe(party_variants(label) + abbreviations)
 
 
+# --- Councillor names -------------------------------------------------------
+
+
+def councillor_clean(text: str) -> str:
+    """basic_clean, and drop a leading 'Councillor '." and trailing honorifics like 'OBE' or 'BEM'."""
+    text = re.sub(r"^(councillor|cllr) ", "", basic_clean(text))
+    return re.sub(r" (obe|bem|mbe)$", "", text)
+
+
 # --- Built-in profiles -------------------------------------------------------
 
 GENERIC = Profile(
@@ -232,7 +241,20 @@ UK_POLITICAL_PARTIES = Profile(
     },
 )
 
-PROFILES: dict[str, Profile] = {p.name: p for p in (GENERIC, UK_DIVISIONS, UK_POLITICAL_PARTIES)}
+COUNCILLOR_NAMES = Profile(
+    name="councillor-names",
+    description="Clean councillor names",
+    jev_instructions=(
+        "The state is a name as written in an external source. It may be abbreviated, "
+        "misspelled, punctuated differently, or have extra text such as a prefix, or suffix. "
+        "It may have a middle name included or missing. "
+        "Choose the option it refers to."
+    ),
+    clean=councillor_clean,
+)
+
+
+PROFILES: dict[str, Profile] = {p.name: p for p in (GENERIC, UK_DIVISIONS, UK_POLITICAL_PARTIES, COUNCILLOR_NAMES)}
 
 
 def get_profile(profile: str | Profile) -> Profile:
