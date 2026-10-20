@@ -333,7 +333,7 @@ def test_generic_profile_does_not_use_division_rules():
 @pytest.mark.parametrize(
     "text, target",
     [
-        ("labour", LABOUR),
+        ("Labour Party", LABOUR),
         ("UKIP", UKIP),  # an abbreviation in the target's brackets
         ("uk independence party", UKIP),
         ("Liberal", LIBERAL),  # "The" and "Party" are ignored
@@ -776,7 +776,7 @@ def test_jev_malformed_response_passes_input_on(monkeypatch):
 
 # --- Many-to-one matching ----------------------------------------------------
 
-WELSH_LABOUR_PARTY = Target("PP53", "Labour Party", aliases=["Welsh Labour"])
+LABOUR_WITH_ALIAS = Target("PP53", "Labour Party", aliases=["Labour Movement"])
 CONSERVATIVES = Target("PP52", "Conservative and Unionist Party")
 
 
@@ -785,26 +785,26 @@ def many(inputs, targets, backends, profile="uk-political-parties"):
 
 
 def test_many_to_one_matches_several_inputs_to_one_target():
-    matcher = many(["Labour Party", "Welsh Labour", "Tory"], [WELSH_LABOUR_PARTY, CONSERVATIVES],
+    matcher = many(["Labour Party", "Labour Movement", "Tory"], [LABOUR_WITH_ALIAS, CONSERVATIVES],
                    [ExactMatch(), CaseInsensitiveMatch(), CleanedMatch()])
     assert {text: m.target.id for text, m in matcher.matches.items()} == {
-        "Labour Party": "PP53", "Welsh Labour": "PP53", "Conservative and Unionist Party": "PP52",
+        "Labour Party": "PP53", "Labour Movement": "PP53", "Conservative and Unionist Party": "PP52",
     }
-    assert matcher.unmatched_targets == [WELSH_LABOUR_PARTY, CONSERVATIVES]  # never used up
+    assert matcher.unmatched_targets == [LABOUR_WITH_ALIAS, CONSERVATIVES]  # never used up
 
 
 def test_one_to_one_matchers_reject_the_same_clash():
-    matcher = AsymmetricMatcher(["Labour Party", "Welsh Labour"], [WELSH_LABOUR_PARTY, CONSERVATIVES, ABBEY],
+    matcher = AsymmetricMatcher(["Labour Party", "Labour Movement"], [LABOUR_WITH_ALIAS, CONSERVATIVES, ABBEY],
                                 profile="uk-political-parties").run([ExactMatch()])
     assert matcher.matches == {}
 
 
 def test_many_to_one_has_no_count_check_or_last_remaining_pairing():
     spy = Spy()
-    matcher = many(["Labour Party", "Lab", "Grn", "LD"], [WELSH_LABOUR_PARTY], [ExactMatch(), spy])
+    matcher = many(["Labour Party", "Lab", "Grn", "LD"], [LABOUR_WITH_ALIAS], [ExactMatch(), spy])
     assert matched(matcher) == {"Labour Party": ("PP53", "exact")}
     # "Lab" etc. were left for the next backend, not paired with the only target.
-    assert spy.calls == [(["Lab", "Grn", "LD"], [WELSH_LABOUR_PARTY])]
+    assert spy.calls == [(["Lab", "Grn", "LD"], [LABOUR_WITH_ALIAS])]
 
 
 def test_many_to_one_still_leaves_an_input_that_fits_two_targets():
@@ -815,32 +815,32 @@ def test_many_to_one_still_leaves_an_input_that_fits_two_targets():
 
 
 def test_many_to_one_manual_decisions_can_share_a_target():
-    matcher = ManyToOneMatcher(["Lab", "Labr"], [WELSH_LABOUR_PARTY, CONSERVATIVES])
+    matcher = ManyToOneMatcher(["Lab", "Labr"], [LABOUR_WITH_ALIAS, CONSERVATIVES])
     matcher.run([ManualMatch({"Lab": "PP53", "Labr": "PP53"})])
     assert matched(matcher) == {"Lab": ("PP53", "manual"), "Labr": ("PP53", "manual")}
 
 
 def test_many_to_one_console_offers_every_target_each_time():
     console, output = human(["1", "1"])  # 1 Conservative..., 2 Labour Party, both times
-    matcher = many(["Tories?", "Cons?"], [WELSH_LABOUR_PARTY, CONSERVATIVES], [console], profile="generic")
+    matcher = many(["Tories?", "Cons?"], [LABOUR_WITH_ALIAS, CONSERVATIVES], [console], profile="generic")
     assert matched(matcher) == {"Tories?": ("PP52", "console"), "Cons?": ("PP52", "console")}
 
 
 def test_many_to_one_state_round_trips():
-    matcher = many(["Labour Party", "Welsh Labour", "x"], [WELSH_LABOUR_PARTY, CONSERVATIVES], [ExactMatch()])
+    matcher = many(["Labour Party", "Labour Movement", "x"], [LABOUR_WITH_ALIAS, CONSERVATIVES], [ExactMatch()])
     restored = ManyToOneMatcher.from_partial(json.loads(json.dumps(matcher.to_dict())),
-                                             [WELSH_LABOUR_PARTY, CONSERVATIVES])
+                                             [LABOUR_WITH_ALIAS, CONSERVATIVES])
     assert vars(restored) == vars(matcher)
     with pytest.raises(ValueError, match="can't continue 'many-to-one' matching"):
-        AsymmetricMatcher.from_partial(matcher.to_dict(), [WELSH_LABOUR_PARTY, CONSERVATIVES])
+        AsymmetricMatcher.from_partial(matcher.to_dict(), [LABOUR_WITH_ALIAS, CONSERVATIVES])
 
 
 # --- Two-stage matching ------------------------------------------------------
 
 LABOUR_PARTY = Target("PP53", "Labour Party")
 DESCRIPTIONS = {
-    "PP53": [Target("PP53__1", "Welsh Labour", aliases=["Llafur Cymru"]), Target("PP53__2", "Labour Candidate")],
-    "PP52": [Target("PP52__1", "Welsh Conservatives")],
+    "PP53": [Target("PP53__1", "Labour in Wales", aliases=["Llafur Cymru"]), Target("PP53__2", "Labour Candidate")],
+    "PP52": [Target("PP52__1", "Conservative in Wales")],
 }
 PARTIES = [LABOUR_PARTY, CONSERVATIVES, INDEPENDENT]
 RULES = [ExactMatch(), CaseInsensitiveMatch(), CleanedMatch()]
@@ -856,12 +856,12 @@ def ids(result):
 
 
 def test_two_stage_matches_the_parent_then_the_child():
-    matcher = two_stage(["Labour Party", "Welsh Labour", "LLAFUR CYMRU", "Tory", "Welsh Conservatives", ""])
+    matcher = two_stage(["Labour Party", "Labour in Wales", "LLAFUR CYMRU", "Tory", "Conservative in Wales", ""])
     assert ids(matcher.match_for("Labour Party")) == ("PP53", "PP53")  # the party's own name
-    assert ids(matcher.match_for("Welsh Labour")) == ("PP53", "PP53__1")
+    assert ids(matcher.match_for("Labour in Wales")) == ("PP53", "PP53__1")
     assert ids(matcher.match_for("LLAFUR CYMRU")) == ("PP53", "PP53__1")
     assert ids(matcher.match_for("Tory")) == ("PP52", "PP52")
-    assert ids(matcher.match_for("Welsh Conservatives")) == ("PP52", "PP52__1")
+    assert ids(matcher.match_for("Conservative in Wales")) == ("PP52", "PP52__1")
     assert ids(matcher.match_for("")) == ("ynmp-party:2", None)  # Independent has no children
 
 
@@ -878,11 +878,11 @@ def test_two_stage_keeps_the_parent_when_the_child_is_unclear():
 
 
 def test_two_stage_run_again_reaches_newly_matched_inputs():
-    matcher = two_stage(["Welsh Labour", "Welsh Lab"])
+    matcher = two_stage(["Labour in Wales", "Welsh Lab"])
     assert matcher.match_for("Welsh Lab").parent is None
     matcher.run([ManualMatch({"Welsh Lab": "PP53"})], child_backends=[ManualMatch({"Welsh Lab": "PP53__1"})])
     assert ids(matcher.match_for("Welsh Lab")) == ("PP53", "PP53__1")
-    assert ids(matcher.match_for("Welsh Labour")) == ("PP53", "PP53__1")
+    assert ids(matcher.match_for("Labour in Wales")) == ("PP53", "PP53__1")
 
 
 def test_two_stage_matches_lists_every_parent_match():

@@ -577,10 +577,10 @@ parties = [
     Target("ynmp-party:2", "Independent"),
 ]
 descriptions = {
-    "PP53": [Target("PP53__1", "Welsh Labour", aliases=["Llafur Cymru"]), Target("PP53__2", "Labour Candidate")],
-    "PP52": [Target("PP52__1", "Welsh Conservatives")],
+    "PP53": [Target("PP53__1", "Labour in Wales", aliases=["Llafur Cymru"]), Target("PP53__2", "Labour Candidate")],
+    "PP52": [Target("PP52__1", "Conservative in Wales")],
 }
-names = ["Labour Party", "Welsh Labour", "LLAFUR CYMRU", "Tory", ""]
+names = ["Labour Party", "Labour in Wales", "LLAFUR CYMRU", "Tory", ""]
 
 matcher = TwoStageMatcher(names, parties, descriptions, profile="uk-political-parties")
 matcher.run([ExactMatch(), CaseInsensitiveMatch(), CleanedMatch()])
@@ -592,7 +592,7 @@ for name in names:
 
 ```
 'Labour Party'   -> PP53          PP53
-'Welsh Labour'   -> PP53          PP53__1
+'Labour in Wales' -> PP53          PP53__1
 'LLAFUR CYMRU'   -> PP53          PP53__1
 'Tory'           -> PP52          PP52
 ''               -> ynmp-party:2  None
