@@ -174,10 +174,10 @@ def name_variants(text: str) -> list[str]:
     return dedupe(variants)
 
 
-def councillor_clean(text: str) -> str:
+def name_clean(text: str) -> str:
     """basic_clean, and drop a leading 'Councillor '." and trailing honorifics like 'OBE' or 'BEM'."""
-    text = re.sub(r"^(councillor|cllr) ", "", basic_clean(text))
-    return re.sub(r" (obe|bem|mbe)$", "", text)
+    text = re.sub(r"^(county councillor|councillor|cllr) ", "", basic_clean(text))
+    return re.sub(r" (obe|bem|mbe|phd|dbe)$", "", text)
 
 
 # --- Built-in profiles -------------------------------------------------------
@@ -265,7 +265,7 @@ COUNCILLOR_NAMES = Profile(
         "It may have a middle name included or missing. "
         "Choose the option it refers to."
     ),
-    clean=councillor_clean,
+    clean=name_clean,
     variants=name_variants,
 )
 
