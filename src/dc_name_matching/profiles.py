@@ -141,11 +141,12 @@ def party_variants(text: str) -> list[str]:
     """Other forms of a party name.
 
     Handles e.g. "Scottish National Party (SNP)" (the name before the brackets),
+    "Labour & Cooperative Party" (Labour and Co-operative Party)
     "Welsh Labour / Llafur Cymru" and "Welsh Labour | Llafur Cymru" (English
     and Welsh), and "Plaid Cymru - The Party of Wales".
     """
     text = collapse_whitespace(text)
-    variants = [text, text.split("(")[0]]
+    variants = [text, text.split("(")[0], text.replace("&", "and")]
     return dedupe(variants + split_variants(text, (" | ", "|", " / ", "/", " - ", " – ")))
 
 
