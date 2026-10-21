@@ -222,6 +222,11 @@ UK_POLITICAL_PARTIES = Profile(
             "Annibynnol",
             "Independent / Annibynnol",
             "Annibynnol / Independent",
+            "Heb ei Alinio / Non-aligned",
+            "Unaligned",
+            "Unaffiliated Member",
+            "Unaffiliated, Independent",
+            "Individual Member",
             "Independent Candidate",
             "No description",
             "No description given",
@@ -233,11 +238,11 @@ UK_POLITICAL_PARTIES = Profile(
         ],
         # Common short names and nicknames. party_clean already ignores "The"
         # and "Party", so "The Conservative Party" is covered by "Conservative".
-        "Conservative and Unionist Party": ["Scottish Conservatives", "Welsh Conservatives", "Conservative", "Conservatives", "Tory", "Tories"],
+        "Conservative and Unionist Party": ["Scottish Conservatives", "Welsh Conservatives", "Welsh Conservative Party", "Welsh Conservative", "Conservative", "Conservatives", "Tory", "Tories"],
         "Labour Party": ["Labour", "Welsh Labour", "Scottish Labour"],
-        "Liberal Democrats": ["Scottish Liberal Democrats", "Liberal Democrat", "Lib Dem", "Lib Dems", "LibDem", "LibDems"],
-        "Green Party": ["Green", "Greens", "Green Party of England and Wales"],
-        "Reform UK": ["Reform", "Reform Party UK"],
+        "Liberal Democrats": ["Scottish Liberal Democrats", "Welsh Liberal Democrats", "Liberal Democrat", "Lib Dem", "Lib Dems", "LibDem", "LibDems"],
+        "Green Party": ["Green", "Greens", "Green Party of England and Wales", "Wales Green Party",],
+        "Reform UK": ["Reform", "Reform Party UK", "Reform UK Wales"],
     },
 )
 
