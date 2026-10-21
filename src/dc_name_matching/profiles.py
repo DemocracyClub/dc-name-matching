@@ -163,6 +163,15 @@ def party_target_variants(label: str) -> list[str]:
 
 
 # --- Councillor names -------------------------------------------------------
+def name_variants(text: str) -> list[str]:
+    """Other forms of a councillor name.
+
+    Handles:
+    Baynham, Beverley -> Beverley Banyham
+    """
+    text = collapse_whitespace(text)
+    variants = [text, " ".join(text.split(",")[::-1])]
+    return dedupe(variants)
 
 
 def councillor_clean(text: str) -> str:
@@ -257,6 +266,7 @@ COUNCILLOR_NAMES = Profile(
         "Choose the option it refers to."
     ),
     clean=councillor_clean,
+    variants=name_variants,
 )
 
 

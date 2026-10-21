@@ -23,7 +23,7 @@ from dc_name_matching import (
     Target,
     TwoStageMatcher,
 )
-from dc_name_matching.profiles import division_clean, division_variants
+from dc_name_matching.profiles import division_clean, division_variants, name_variants
 
 ABBEY = Target("local.x.abbey.2023-05-04", "Abbey")
 ST_MARYS = Target("local.x.st-marys.2023-05-04", "St Mary's")
@@ -221,6 +221,10 @@ def test_cleaned_does_not_guess_partial_names():
 def test_division_clean_and_variants():
     assert division_clean("Westwood & Jacksdale Ward") == "westwood and jacksdale"
     assert "bramhall north" in division_variants("bramhall north - 2023")
+
+def test_name_variants():
+    results = name_variants("Baynham, Beverley")
+    assert "Beverley Baynham" in name_variants("Baynham, Beverley")
 
 
 # --- Aliases -----------------------------------------------------------------
