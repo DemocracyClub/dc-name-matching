@@ -39,7 +39,7 @@ from .core import (
 from .human import ConsoleMatch, ManualMatch
 from .jev import JevError, JevMatch
 from .profiles import PROFILES, Profile, get_profile
-from .rules import CaseInsensitiveMatch, CleanedMatch, ExactMatch, NormalisedMatch
+from .rules import CaseInsensitiveMatch, CleanedMatch, ExactMatch, NormalisedMatch, CleanedFirstWordLastWordMatch, DehyphenedCleanedMatch
 from .two_stage import TwoStageMatch, TwoStageMatcher
 
 __all__ = [
@@ -57,6 +57,8 @@ __all__ = [
     "Match",
     "MatchBackend",
     "NormalisedMatch",
+    "CleanedFirstWordLastWordMatch",
+    "DehyphenedCleanedMatch",
     "PROFILES",
     "Profile",
     "Suggestion",

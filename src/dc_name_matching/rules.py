@@ -116,6 +116,43 @@ class CaseInsensitiveMatch(NormalisedMatch):
         super().__init__("case-insensitive", lambda s: collapse_whitespace(s).casefold())
 
 
+class CleanedFirstWordLastWordMatch(NormalisedMatch):
+    """
+        Match based on the first and last words after applying the matcher profile's cleaning function and variants.
+    """
+
+    def __init__(self):
+        self.name = "cleaned-first-word-last-word"
+
+    def rules(self, profile: Profile):
+        def normalise(text: str) -> str:
+            words = profile.clean(text).split()
+            return f"{words[0]} {words[-1]}" if words else ""
+        return normalise, profile.variants, profile.target_variants
+
+
+class DehyphenedCleanedMatch(NormalisedMatch):
+    """
+        Remove hyphens before applying the matcher profile's cleaning function and variants.
+
+        The basic clean replaces hyphens with " ", so "Pen-y-groes" becomes "pen y groes".
+        This removes hyphens entirely, so "Pen-y-groes" becomes "penygroes" instead.
+
+        This could possibly lead to false positives so only use with a target set that
+        you're sure does not contain conflicting hyphenated/unhyphenated names.
+    """
+
+    def __init__(self):
+        self.name = "dehyphened-cleaned"
+
+    def rules(self, profile: Profile):
+        def normalise(text: str) -> str:
+            dehyphened_text = text.replace("-", "")
+            cleaned_text = profile.clean(dehyphened_text)
+            return cleaned_text if cleaned_text else ""
+        return normalise, profile.variants, profile.target_variants
+
+
 class CleanedMatch(NormalisedMatch):
     """Match after tidying up names with the matcher's profile's cleaning function and variants.
 

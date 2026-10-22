@@ -9,6 +9,8 @@ from dc_name_matching import (
     LAST_REMAINING,
     AsymmetricMatcher,
     CaseInsensitiveMatch,
+    CleanedFirstWordLastWordMatch,
+    DehyphenedCleanedMatch,
     CleanedMatch,
     ConsoleMatch,
     ExactMatch,
@@ -30,6 +32,8 @@ ST_MARYS = Target("local.x.st-marys.2023-05-04", "St Mary's")
 WESTWOOD = Target("local.x.westwood-jacksdale.2023-05-04", "Westwood & Jacksdale")
 HUCKNALL_N = Target("local.x.hucknall-north.2023-05-04", "Hucknall North")
 HUCKNALL_S = Target("local.x.hucknall-south.2023-05-04", "Hucknall South")
+FIRST_MIDDLE_LAST = Target("fml_id", "First Middle Last")
+UNHYPHENATED = Target("hyp_id", "Penygroes")
 
 
 def sym(inputs, targets, backends, profile="generic"):
@@ -190,6 +194,27 @@ def test_exact_match():
 def test_case_insensitive_match():
     matcher = sym(["HUCKNALL  north", "x", "y"], [HUCKNALL_N, ABBEY, ST_MARYS], [CaseInsensitiveMatch()])
     assert matched(matcher) == {"HUCKNALL  north": (HUCKNALL_N.id, "case-insensitive")}
+
+
+def test_first_word_last_word_match():
+    matcher = sym(
+        ["First Last", "Last First", "x",],
+        [FIRST_MIDDLE_LAST, ABBEY, ST_MARYS],
+        [CleanedFirstWordLastWordMatch()],
+        )
+    assert matched(matcher) == {
+        "First Last": (FIRST_MIDDLE_LAST.id, "cleaned-first-word-last-word"),
+        }
+
+def test_cleaned_dehyphenated_match():
+    matcher = sym(
+        ["Pen-y-groes", "x", "y",],
+        [UNHYPHENATED, ABBEY, ST_MARYS],
+        [DehyphenedCleanedMatch()],
+        )
+    assert matched(matcher) == {
+        "Pen-y-groes": (UNHYPHENATED.id, "dehyphened-cleaned"),
+        }
 
 
 @pytest.mark.parametrize(
